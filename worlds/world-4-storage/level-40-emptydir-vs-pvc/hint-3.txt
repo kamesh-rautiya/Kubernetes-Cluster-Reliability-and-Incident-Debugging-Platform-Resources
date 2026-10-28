@@ -1,0 +1,53 @@
+✅ HINT 3: Complete Solution
+
+Fix: Replace emptyDir with PersistentVolumeClaim
+
+📝 Step 1: Create PVC
+```yaml
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+  namespace: kuberescue
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
+
+📝 Step 2: Update Pod to use PVC
+```yaml
+apiVersion: v1
+kind: Pod
+spec:
+  volumes:
+  - name: data
+    persistentVolumeClaim:  # ✅ Changed from emptyDir
+      claimName: app-data
+```
+
+🚀 Apply:
+```bash
+kubectl delete -f broken.yaml
+kubectl apply -f solution.yaml
+
+# Write data
+kubectl exec data-app -n kuberescue -- sh -c 'echo "persistent data" > /data/test.txt'
+
+# Restart pod
+kubectl delete pod data-app -n kuberescue
+kubectl apply -f solution.yaml
+
+# Check data still exists!
+kubectl exec data-app -n kuberescue -- cat /data/test.txt
+# Should show "persistent data" - survived the restart!
+```
+
+💡 Remember:
+- emptyDir = Temporary, tied to pod lifecycle
+- PVC = Persistent, independent of pod lifecycle
+
+Choose PVC when data must survive!

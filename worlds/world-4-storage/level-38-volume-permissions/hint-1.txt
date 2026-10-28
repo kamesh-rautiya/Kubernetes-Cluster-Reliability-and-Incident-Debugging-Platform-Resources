@@ -1,0 +1,32 @@
+🔍 HINT 1: Observing the Problem
+
+Let's investigate the permission denied error:
+
+1️⃣ Check pod status:
+   kubectl get pod writer-app -n kuberescue
+   kubectl logs writer-app -n kuberescue
+   
+   What error message do you see?
+
+2️⃣ Check the pod's security context:
+   kubectl get pod writer-app -n kuberescue -o yaml | grep -A 5 securityContext
+   
+   What user/group is the container running as?
+
+3️⃣ Check the volume mount:
+   kubectl exec writer-app -n kuberescue -- ls -la /data 2>/dev/null || echo "Pod not running"
+   
+   If pod runs briefly, check what permissions the volume has
+
+4️⃣ Look for fsGroup:
+   kubectl get pod writer-app -n kuberescue -o jsonpath='{.spec.securityContext.fsGroup}'
+   
+   Is fsGroup configured?
+
+📝 Key Observation:
+The container runs as user 1000, but the volume is owned by root (user 0)!
+
+🤔 Questions:
+• What is fsGroup?
+• How do volume permissions work in Kubernetes?
+• What's the difference between runAsUser and fsGroup?

@@ -1,0 +1,9 @@
+🔍 Observation Hint:
+
+Check what resources exist in the kuberescue namespace:
+`kubectl get all -n kuberescue`
+
+Now check the default namespace:
+`kubectl get all -n default`
+
+Where are the client-app pod and backend-service located?

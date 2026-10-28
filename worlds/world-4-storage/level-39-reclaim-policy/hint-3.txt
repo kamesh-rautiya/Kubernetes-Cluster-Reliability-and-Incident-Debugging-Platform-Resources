@@ -1,0 +1,49 @@
+✅ HINT 3: Complete Solution
+
+Fix: Change persistentVolumeReclaimPolicy to Retain
+
+📝 In PersistentVolume:
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: important-data
+spec:
+  capacity:
+    storage: 10Gi
+  persistentVolumeReclaimPolicy: Retain  # ✅ Changed from Delete
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  hostPath:
+    path: /mnt/data/important
+```
+
+🚀 Apply:
+```bash
+kubectl delete -f broken.yaml
+kubectl apply -f solution.yaml
+kubectl get pv important-data
+# RECLAIM POLICY should show "Retain"
+```
+
+🧪 Test data safety:
+```bash
+# Write some data
+kubectl exec data-writer -n kuberescue -- cat /data/important.txt
+
+# Delete PVC (simulate accident)
+kubectl delete pvc data-claim -n kuberescue
+
+# Check PV
+kubectl get pv important-data
+# Status: Released (not Deleted!)
+
+# Data still exists on disk at /mnt/data/important
+```
+
+💡 Remember: 
+- Retain = Safe, data preserved, manual cleanup
+- Delete = Risky, automatic cleanup, data lost forever
+
+Always use Retain for production data!

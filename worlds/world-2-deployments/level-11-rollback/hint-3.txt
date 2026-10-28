@@ -1,0 +1,16 @@
+💡 Near-Solution Hint:
+
+Rollback the deployment to the previous working version:
+
+`kubectl rollout undo deployment/web-app -n kuberescue`
+
+This will:
+1. Revert to the previous ReplicaSet
+2. Scale down the broken pods
+3. Scale up the working pods
+
+Then verify:
+`kubectl get deployment web-app -n kuberescue`
+`kubectl get pods -n kuberescue`
+
+All 3 pods should be Running!

@@ -1,0 +1,17 @@
+🔍 Observation Hint:
+
+Check the deployments:
+`kubectl get deployments -n kuberescue`
+
+You should see app-blue and app-green, both with 3/3 replicas.
+
+Check the service:
+`kubectl get service app-service -n kuberescue -o yaml | grep -A 5 selector`
+
+Which version is it pointing to?
+
+Check the endpoints:
+`kubectl get endpoints app-service -n kuberescue`
+
+Try to access the service and see which version responds:
+`kubectl run -it --rm test --image=busybox --restart=Never -n kuberescue -- wget -q -O- app-service`

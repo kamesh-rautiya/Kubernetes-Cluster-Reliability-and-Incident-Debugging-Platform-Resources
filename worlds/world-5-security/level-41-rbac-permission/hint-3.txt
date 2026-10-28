@@ -1,0 +1,51 @@
+✅ HINT 3: Complete Solution
+
+Fix: Create Role and RoleBinding
+
+📝 Step 1: Create Role
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader-role
+  namespace: kuberescue
+rules:
+- apiGroups: [""]  # "" = core API group
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+```
+
+📝 Step 2: Create RoleBinding
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-reader-binding
+  namespace: kuberescue
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-reader-role  # Reference the Role
+subjects:
+- kind: ServiceAccount
+  name: pod-reader  # Grant to this ServiceAccount
+  namespace: kuberescue
+```
+
+🚀 Apply:
+```bash
+kubectl delete -f broken.yaml
+kubectl apply -f solution.yaml
+kubectl logs pod-lister -n kuberescue
+# Should show: "✅ Success! Can list pods"
+```
+
+🔍 Verify permissions:
+```bash
+kubectl auth can-i list pods \
+  --as=system:serviceaccount:kuberescue:pod-reader \
+  -n kuberescue
+# Should output: yes
+```
+
+💡 Remember: Role + RoleBinding = RBAC permissions!

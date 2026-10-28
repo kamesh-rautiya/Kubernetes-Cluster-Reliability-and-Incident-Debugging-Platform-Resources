@@ -1,0 +1,32 @@
+✅ Solution Hint:
+
+Fix the service selector:
+
+```bash
+kubectl delete svc backend-service -n kuberescue
+kubectl apply -f solution.yaml -n kuberescue
+```
+
+Or edit it directly:
+```bash
+kubectl edit svc backend-service -n kuberescue
+```
+
+Change the selector from:
+```yaml
+selector:
+  app: backend-app  # Wrong
+  tier: api
+```
+
+To:
+```yaml
+selector:
+  app: backend  # Correct - matches pod label
+  tier: api
+```
+
+Then verify endpoints appear:
+```bash
+kubectl get endpoints backend-service -n kuberescue
+```

@@ -1,0 +1,16 @@
+🔍 Observation Hint:
+
+Check what resources exist:
+`kubectl get deployments,replicasets -n kuberescue`
+
+Do you see a standalone ReplicaSet (web-app-rs) without a Deployment?
+
+Try to update the image:
+`kubectl set image replicaset/web-app-rs web=hashicorp/http-echo:latest -n kuberescue`
+
+Check the pods:
+`kubectl get pods -n kuberescue -l app=webapp`
+
+Did the update work? Spoiler: It updated the ReplicaSet spec, but the EXISTING pods didn't change!
+
+ReplicaSets don't do rolling updates - you'd have to manually delete pods or create a new ReplicaSet.

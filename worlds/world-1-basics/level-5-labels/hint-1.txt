@@ -1,0 +1,9 @@
+🔍 Observation Hint:
+
+First, check if the pod is running: `kubectl get pod backend-app -n kuberescue`
+
+Then check the service: `kubectl get service backend-service -n kuberescue`
+
+Finally, check if the service found any pods: `kubectl get endpoints backend-service -n kuberescue`
+
+Do you see any endpoints (IP addresses)? If not, the service isn't connected to the pod.

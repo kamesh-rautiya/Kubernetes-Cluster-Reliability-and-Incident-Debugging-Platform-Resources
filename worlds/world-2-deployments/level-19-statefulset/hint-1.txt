@@ -1,0 +1,19 @@
+🔍 Observation Hint:
+
+Check the current resource type:
+`kubectl get deployments,statefulsets -n kuberescue`
+
+Is it a Deployment or StatefulSet?
+
+Check the pod names:
+`kubectl get pods -n kuberescue -l app=database`
+
+Deployment pods have random names like: database-7d8f9c-abc12
+StatefulSet pods have stable names like: database-0, database-1, database-2
+
+For stateful apps (databases, message queues), you need stable identities!
+
+Try deleting a pod:
+`kubectl delete pod <pod-name> -n kuberescue`
+
+Watch it recreate - does it get the same name?

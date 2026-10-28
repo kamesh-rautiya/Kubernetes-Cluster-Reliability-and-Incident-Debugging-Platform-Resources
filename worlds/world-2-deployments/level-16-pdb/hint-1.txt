@@ -1,0 +1,16 @@
+🔍 Observation Hint:
+
+Check the PodDisruptionBudget:
+`kubectl get pdb -n kuberescue`
+
+Look at the ALLOWED column - is it 0?
+
+Describe the PDB:
+`kubectl describe pdb db-proxy-pdb -n kuberescue`
+
+Check "Disruptions allowed" - if it's 0, node drains will fail!
+
+Check the deployment:
+`kubectl get deployment database-proxy -n kuberescue`
+
+How many replicas? Compare to PDB's minAvailable.
